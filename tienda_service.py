@@ -111,14 +111,14 @@ while sesion_activa:
 
         print(f"Subtotal Neto: ${total_neto:,}".replace(",", "."))
         print(f"IVA (19%):     ${iva:,}".replace(",", "."))
-        print(f"Total Final:   ${total_final:,} (IVA Incluido)").replace(",", ".")
+        print(f"Total Final:   ${total_final:,} (IVA Incluido)".replace(",", "."))
         print("-----------------------------------------")
         print("Métodos disponibles: [1] Tarjeta | [2] Mercado Pago | [3] Google Play")
         
         metodo_opcion = input("Seleccione una pasarela (1-3): ")
         metodo = "Tarjeta de Crédito" if metodo_opcion == "1" else "Mercado Pago" if metodo_opcion == "2" else "Google Play"
 
-        confirmar = input("¿Confirmar pago de ${total_final:,} con {metodo}? (si/no): ".replace(",", ".")).lower()
+        confirmar = input(f"¿Confirmar pago de ${total_final:,} con {metodo}? (si/no): ".replace(",", ".")).lower()
         
         if confirmar == "si":
             pagos.procesar_transaccion(metodo, total_final)
