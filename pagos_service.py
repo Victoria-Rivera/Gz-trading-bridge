@@ -3,3 +3,8 @@ def calcular_totales(monto_neto):
     iva = int(monto_neto * 0.19)
     total_con_iva = monto_neto + iva
     return iva, total_con_iva
+
+def procesar_transaccion(metodo_pago, total_final):
+    print(" Conectando de forma segura con la pasarela ({metodo_pago})...")
+    print("Procesando cargo financiero por ${total_final:,}".replace(",", "."))
+    return True

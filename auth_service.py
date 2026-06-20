@@ -9,3 +9,10 @@ def conectar_bd():
         database="gz_trading"
     )
 
+def validar_credenciales(usuario, clave):
+    conexion = conectar_bd()
+    cursor = conexion.cursor(dictionary=True)
+    
+    cursor.execute("SELECT * FROM usuarios WHERE correo = %s", (usuario,))
+    user_data = cursor.fetchone()
+

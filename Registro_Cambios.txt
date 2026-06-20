@@ -5,3 +5,6 @@
 5.Crecion de carrito de compra en base de las capturas de figma
 6. Creacion de nuevo archivo python "pagos_service" para manejar el iva (usado mas tarde) 
 7. Import de pagos_service al main (tienda_service)
+8. Creacion de checkout del carrito
+9. Definicion de nuevo metodo en pagos_service
+10.Buscar si el usuario existe en la base de datos (auth_service)
