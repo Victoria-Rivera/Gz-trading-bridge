@@ -36,10 +36,10 @@ def validar_credenciales(usuario, clave):
     if user_data['contrasena'] == clave:
         # Inicio exitoso: se resetean los intentos fallidos en la BD
         cursor.execute("UPDATE usuarios SET intentos_fallidos = 0 WHERE correo = %s", (usuario,))
-        conexion.commit()
+        conexion.commit() # Asegura el reseteo inmediato
         resultado = "OK"
     else:
-        # Aumento de intentos fallidos por credenciales erróneas
+        
         nuevos_intentos = user_data['intentos_fallidos'] + 1
         if nuevos_intentos >= 3:
             # Bloqueo físico directo en la base de datos al 3er intento
@@ -48,9 +48,8 @@ def validar_credenciales(usuario, clave):
         else:
             cursor.execute("UPDATE usuarios SET intentos_fallidos = %s WHERE correo = %s", (nuevos_intentos, usuario))
             resultado = "ERROR_DATOS"
-        conexion.commit()
+        conexion.commit() # Asegura el aumento de intentos o el bloqueo inmediato
 
     cursor.close()
     conexion.close()
     return resultado
-
