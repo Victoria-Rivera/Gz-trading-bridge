@@ -2,3 +2,5 @@
 2. Se creo el menu principal en el microservio de tienda_service
 3. Creacion de catalogo en base de las capturas de figma (para mantenerlo simple)
 4. Implementacion de carrito (almacenando las elecciones del usuario)
+5.Crecion de carrito de compra en base de las capturas de figma
+6. Creacion de nuevo archivo python "pagos_service" para manejar el iva (usado mas tarde) 

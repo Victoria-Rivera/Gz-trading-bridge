@@ -29,22 +29,38 @@ if opcion == "1":
         print(f"[{prod['id']}] {prod['nombre']} - ${prod['precio']:,}".replace(",", "."))
         print("-----------------------------------------")
 
-    prod_id = int(input("Ingrese el ID del producto que desea añadir: "))
-    seleccionado = next((p for p in CATALOGO if p["id"] == prod_id), None)
+        prod_id = int(input("Ingrese el ID del producto que desea añadir: "))
+        seleccionado = next((p for p in CATALOGO if p["id"] == prod_id), None)
             
-    if seleccionado:
-       cantidad = int(input(f"¿Cuántas unidades de '{seleccionado['nombre']}' desea agregar? "))
-    if cantidad > 0:      
+        if seleccionado:
+            cantidad = int(input(f"¿Cuántas unidades de '{seleccionado['nombre']}' desea agregar? "))
+        if cantidad > 0:      
             item_carrito = {
-                "nombre": seleccionado["nombre"],
-                "precio": seleccionado["precio"],
-                "cantidad": cantidad,
-                "subtotal": seleccionado["precio"] * cantidad
+                    "nombre": seleccionado["nombre"],
+                    "precio": seleccionado["precio"],
+                    "cantidad": cantidad,
+                    "subtotal": seleccionado["precio"] * cantidad
                     }
             carrito.append(item_carrito)
             print(f"\n[Éxito]: {cantidad}x '{seleccionado['nombre']}' añadido(s) al carrito.")
-    else:
-        print("La cantidad ingresada debe ser mayor a cero.")
+        else:
+           print("La cantidad ingresada debe ser mayor a cero.")
 
-else:
+    else:
         print("El ID de producto seleccionado no existe.")
+
+elif opcion == "2":
+        print("\n=========================================")
+        print("     CARRITO DE COMPRAS (TIENDA-SERVICE) ")
+        print("=========================================")
+        if not carrito:
+            print("Su carrito se encuentra actualmente vacío.")
+        else:
+            neto_total = 0
+            for item in carrito:
+                print(f"• {item['nombre']} x{item['cantidad']} - Subtotal: ${item['subtotal']:,}".replace(",", "."))
+                neto_total += item["subtotal"]
+            print("-----------------------------------------")
+            print(f"Subtotal Neto Acumulado: ${neto_total:,}".replace(",", "."))
+        print("-----------------------------------------")
+        input("Presione ENTER para regresar al menú principal...")
