@@ -1,3 +1,4 @@
+import pagos_service as pagos
 
 CATALOGO = [
     {"id": 1, "nombre": "Pack Carcasas Silicona", "precio": 9990},
@@ -64,3 +65,27 @@ elif opcion == "2":
             print(f"Subtotal Neto Acumulado: ${neto_total:,}".replace(",", "."))
         print("-----------------------------------------")
         input("Presione ENTER para regresar al menú principal...")
+        
+elif opcion == "3":
+        if not carrito:
+            print("\n[Aviso]: El carrito está vacío. Ingrese artículos en el catálogo antes de facturar.")
+        else:
+            
+            print("\n=========================================")
+            print("       CHECKOUT DE PAGO (PAGOS-SERVICE)  ")
+            print("=========================================")
+        
+            total_neto = sum(item["subtotal"] for item in carrito)
+        
+            iva, total_final = pagos.calcular_totales(total_neto)
+
+            print(f"Subtotal Neto: ${total_neto:,}".replace(",", "."))
+            print(f"IVA (19%):     ${iva:,}".replace(",", "."))
+            print(f"Total Final:   ${total_final:,} (IVA Incluido)").replace(",", ".")
+            print("-----------------------------------------")
+        print("Métodos disponibles: [1] Tarjeta | [2] Mercado Pago | [3] Google Play")
+        
+        metodo_opcion = input("Seleccione una pasarela (1-3): ")
+        metodo = "Tarjeta de Crédito" if metodo_opcion == "1" else "Mercado Pago" if metodo_opcion == "2" else "Google Play"
+
+        confirmar = input(f"\n¿Confirmar pago de ${total_final:,} con {metodo}? (si/no): ".replace(",", ".")).lower()
