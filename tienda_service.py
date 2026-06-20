@@ -129,7 +129,7 @@ while sesion_activa:
             print("Transacción cancelada por el usuario. Volviendo al menú.")
 
     elif opcion == "4":
-        print("Cerrando sesión de forma segura... Conexiones con XAMPP terminadas. ¡Adiós!")
+        print("Cerrando sesión de forma segura... ¡Adiós :)!")
         break
     else:
         print("Opción no válida. Por favor, ingrese un número del 1 al 4.")

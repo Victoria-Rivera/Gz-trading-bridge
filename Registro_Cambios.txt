@@ -1,3 +1,8 @@
+
+Historial de modificaciones
+
+-----------------------------------------------------------------------------------------------
+
 1. Se definio una conexion de la base de datos con el xamp en el mircroservicio de auth-service.
 2. Se creo el menu principal en el microservio de tienda_service
 3. Creacion de catalogo en base de las capturas de figma (para mantenerlo simple)
@@ -12,3 +17,51 @@
 12. menu de inicio de sesion de usuario en tienda_service
 13. Cambios en la estructura de tienda_service
 14. Creacion de opcion 4 (salir del sistema)
+15. Modificaciones del codigo de tienda_service
+16. Modificacion auth_service (en caso que no se decida montar una base de datos en MYSQL)
+
+
+Usuarios creados a modo de testeo:
+----------------------------------
+gmail: victoria@duocuc.cl
+clave: clave1234
+
+estado: activo
+
+----------------------------------
+
+gmail: test@gztrading.cl
+clave: password99
+
+estado: activo
+
+---------------------------------
+
+codigo de creacion de base de datos:
+
+CREATE DATABASE IF NOT EXISTS gz_trading;
+USE gz_trading;
+
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    correo VARCHAR(100) NOT NULL UNIQUE,
+    contrasena VARCHAR(100) NOT NULL,
+    intentos_fallidos INT DEFAULT 0,
+    bloqueado TINYINT(1) DEFAULT 0
+);
+
+INSERT IGNORE INTO usuarios (correo, contrasena, intentos_fallidos, bloqueado) 
+VALUES ('victoria@duocuc.cl', 'clave1234', 0, 0);
+
+INSERT IGNORE INTO usuarios (correo, contrasena, intentos_fallidos, bloqueado) 
+VALUES ('test@gztrading', 'password99', 0, 0);
+
+-----------------------------------
+
+notas del testeo:
+Incidencia técnica corregida en Línea 114 (tienda_service.py): Se detectó una excepción 'AttributeError:
+ NoneType has no attribute replace' 
+ debido a un cierre anticipado del paréntesis de la función print(). 
+ El error se soluciono reestructurando el método para aplicar el
+formateo de string antes de la salida estándar por consola
+Formateo de cadenas (f-strings) corregido en pasarelas de pago y mensajes de confirmación de checkout.
