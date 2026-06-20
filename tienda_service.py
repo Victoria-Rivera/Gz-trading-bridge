@@ -6,6 +6,8 @@ CATALOGO = [
     {"id": 4, "nombre": "Audífonos Bluetooth In-Ear", "precio": 19990}
 ]
 
+carrito = []
+
 
 print("\n=========================================")
 print("          MENÚ PRINCIPAL                   ")
@@ -26,3 +28,23 @@ if opcion == "1":
     for prod in CATALOGO:
         print(f"[{prod['id']}] {prod['nombre']} - ${prod['precio']:,}".replace(",", "."))
         print("-----------------------------------------")
+
+    prod_id = int(input("Ingrese el ID del producto que desea añadir: "))
+    seleccionado = next((p for p in CATALOGO if p["id"] == prod_id), None)
+            
+    if seleccionado:
+       cantidad = int(input(f"¿Cuántas unidades de '{seleccionado['nombre']}' desea agregar? "))
+    if cantidad > 0:      
+            item_carrito = {
+                "nombre": seleccionado["nombre"],
+                "precio": seleccionado["precio"],
+                "cantidad": cantidad,
+                "subtotal": seleccionado["precio"] * cantidad
+                    }
+            carrito.append(item_carrito)
+            print(f"\n[Éxito]: {cantidad}x '{seleccionado['nombre']}' añadido(s) al carrito.")
+    else:
+        print("La cantidad ingresada debe ser mayor a cero.")
+
+else:
+        print("El ID de producto seleccionado no existe.")

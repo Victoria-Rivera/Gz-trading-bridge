@@ -1,3 +1,4 @@
 1. Se definio una conexion de la base de datos con el xamp en el mircroservicio de auth-service.
 2. Se creo el menu principal en el microservio de tienda_service
-3. Creacion de carrito en base de las capturas de figma (para mantenerlo simple)
+3. Creacion de catalogo en base de las capturas de figma (para mantenerlo simple)
+4. Implementacion de carrito (almacenando las elecciones del usuario)
