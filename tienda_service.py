@@ -1,0 +1,10 @@
+print("\n=========================================")
+print("          MENÚ PRINCIPAL                   ")
+print("   ¡Bienvenido a GZ-Trading-Bridge!        ")
+print(" =========================================")
+print("1. Ver Catálogo y Agregar Productos")
+print("2. Ver mi Carrito de Compras")
+print("3. Proceder al Pago (Checkout)")
+print("5. Cerrar Sesión y Salir")
+print("-----------------------------------------")
+  
