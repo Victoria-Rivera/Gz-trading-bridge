@@ -8,3 +8,7 @@
 8. Creacion de checkout del carrito
 9. Definicion de nuevo metodo en pagos_service
 10.Buscar si el usuario existe en la base de datos (auth_service)
+11. Implementacion de acciones que hace auth_service cuando un usuario quiere conectarse
+12. menu de inicio de sesion de usuario en tienda_service
+13. Cambios en la estructura de tienda_service
+14. Creacion de opcion 4 (salir del sistema)
