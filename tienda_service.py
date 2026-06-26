@@ -1,5 +1,6 @@
-import pagos_service as pagos
-import auth_service as auth
+import random  
+import Funciones.pagos_service as pagos
+import Funciones.auth_service as auth
 
 CATALOGO = [
     {"id": 1, "nombre": "Pack Carcasas Silicona", "precio": 9990},
@@ -13,13 +14,14 @@ sesion_activa = False
 
 print("  GZ-TRADING-BRIDGE ")
 print("    ¡Bienvenido!    ")
-# control de acceso
+
+
 while not sesion_activa:
     print("--- INICIO DE SESIÓN ---")
     user = input("Correo: ")
     password = input("Contraseña: ")
 
-    # Conexion a auth_service
+
     resultado = auth.validar_credenciales(user, password)
 
     if resultado == "OK":
@@ -27,7 +29,7 @@ while not sesion_activa:
         sesion_activa = True
     elif resultado == "BLOQUEADO":
         print("Cuenta bloqueada en XAMPP por exceso de intentos erróneos.")
-        exit() # Corta la ejecución del programa
+        exit() 
     elif resultado == "ERROR_LARGO":
         print("La contraseña debe tener más de 8 caracteres.")
     else:
@@ -51,7 +53,7 @@ while sesion_activa:
         print("          CATÁLOGO DE PRODUCTOS          ")
         print("=========================================")
         for prod in CATALOGO:
-            print(f"[{prod['id']}] {prod['nombre']} - ${prod['precio']:,}".replace(",", "."))
+            print(f"[{prod['id']}] {prod['nombre']} - {pagos.formatear_dinero(prod['precio'])}")
         print("-----------------------------------------")
 
         try:
@@ -77,7 +79,6 @@ while sesion_activa:
         except ValueError:
             print("Se ingresó un carácter alfabético o no numérico inválido, intente nuevamente")
 
-
     elif opcion == "2":
         print("\n=========================================")
         print("     CARRITO DE COMPRAS (TIENDA-SERVICE) ")
@@ -87,10 +88,10 @@ while sesion_activa:
         else:
             neto_total = 0
             for item in carrito:
-                print(f"• {item['nombre']} x{item['cantidad']} - Subtotal: ${item['subtotal']:,}".replace(",", "."))
+                print(f"• {item['nombre']} x{item['cantidad']} - Subtotal: {pagos.formatear_dinero(item['subtotal'])}")
                 neto_total += item["subtotal"]
             print("-----------------------------------------")
-            print(f"Subtotal Neto Acumulado: ${neto_total:,}".replace(",", "."))
+            print(f"Subtotal Neto Acumulado: {pagos.formatear_dinero(neto_total)}")
 
         print("-----------------------------------------")
         input("Presione ENTER para regresar al menú principal...")
@@ -104,21 +105,35 @@ while sesion_activa:
         print("       CHECKOUT DE PAGO (PAGOS-SERVICE)  ")
         print("=========================================")
         
-        
         total_neto = sum(item["subtotal"] for item in carrito)
         
-        iva, total_final = pagos.calcular_totales(total_neto)
+        #Descuento random
+        descuentos_posibles = [0, 10, 15, 25, 50]
+        porcentaje_desc = random.choice(descuentos_posibles)
+        
+        monto_descuento = total_neto * (porcentaje_desc / 100)
+        neto_con_descuento = total_neto - monto_descuento
+        
+        iva, total_final = pagos.calcular_totales(neto_con_descuento)
 
-        print(f"Subtotal Neto: ${total_neto:,}".replace(",", "."))
-        print(f"IVA (19%):     ${iva:,}".replace(",", "."))
-        print(f"Total Final:   ${total_final:,} (IVA Incluido)".replace(",", "."))
+        print(f"Subtotal Neto Inicial: {pagos.formatear_dinero(total_neto)}")
+        
+        if porcentaje_desc > 0:
+            print(f"¡Cupón Sorpresa Aplicado!: {porcentaje_desc}% de descuento")
+            print(f"Monto Descontado:      -{pagos.formatear_dinero(monto_descuento)}")
+            print(f"Nuevo Neto:            {pagos.formatear_dinero(neto_con_descuento)}")
+        else:
+            print("Cupón Sorpresa: Hoy no hubo suerte (0% de descuento)")
+            
+        print(f"IVA (19%):             {pagos.formatear_dinero(iva)}")
+        print(f"Total Final a Pagar:   {pagos.formatear_dinero(total_final)} (IVA Incluido)")
         print("-----------------------------------------")
         print("Métodos disponibles: [1] Tarjeta | [2] Mercado Pago | [3] Google Play")
         
         metodo_opcion = input("Seleccione una pasarela (1-3): ")
         metodo = "Tarjeta de Crédito" if metodo_opcion == "1" else "Mercado Pago" if metodo_opcion == "2" else "Google Play"
 
-        confirmar = input(f"¿Confirmar pago de ${total_final:,} con {metodo}? (si/no): ".replace(",", ".")).lower()
+        confirmar = input(f"¿Confirmar pago de {pagos.formatear_dinero(total_final)} con {metodo}? (si/no): ").lower()
         
         if confirmar == "si":
             pagos.procesar_transaccion(metodo, total_final)

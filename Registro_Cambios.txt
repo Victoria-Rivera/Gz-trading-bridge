@@ -19,7 +19,7 @@ Historial de modificaciones
 14. Creacion de opcion 4 (salir del sistema)
 15. Modificaciones del codigo de tienda_service
 16. Modificacion auth_service (en caso que no se decida montar una base de datos en MYSQL)
-
+17. Modificaciones a Tienda_service (implementando nuevas cosas en opcion 2)
 
 Usuarios creados a modo de testeo:
 ----------------------------------
@@ -65,3 +65,9 @@ Incidencia técnica corregida en Línea 114 (tienda_service.py): Se detectó una
  El error se soluciono reestructurando el método para aplicar el
 formateo de string antes de la salida estándar por consola
 Formateo de cadenas (f-strings) corregido en pasarelas de pago y mensajes de confirmación de checkout.
+
+notas hechas por el profe: 
+
+Implementar un sistema donde el usuario pueda ingresar lo que desea buscar (un tipo de barra de busqueda)
+Mejorar sistema y distribuccion (hecho)
+Grabar video:

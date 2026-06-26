@@ -8,3 +8,6 @@ def procesar_transaccion(metodo_pago, total_final):
     print(f" Conectando de forma segura con la pasarela ({metodo_pago})...")
     print(f"Procesando cargo financiero por ${total_final:,}".replace(",", "."))
     return True
+
+def formato_moneda(valor):
+    return f"${valor:,.0f}".replace(",", ".")
