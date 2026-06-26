@@ -12,7 +12,6 @@ CATALOGO = [
 carrito = []
 sesion_activa = False
 
-
 print("  GZ-TRADING-BRIDGE ")
 print("    ¡Bienvenido!    ")
 
@@ -67,23 +66,23 @@ while sesion_activa:
                 comparar = input("¿Deseas activar la Garantía de Mejor Precio? (si/no): ").lower()
                 
                 if comparar == "si":
-                    competencia = input("¿En qué tienda lo viste? (ej: Amazon, MercadoLibre, Ripley): ")
+                    competencia = input("¿En qué tienda lo viste?: ")
                     try:
-                        precio_competencia = int(input(f"¿A qué precio neto (sin IVA) lo tienen en {competencia}?: $"))
+                        precio_competencia = int(input(f"¿A qué precio lo tienen en {competencia}?: $"))
                         
                         if precio_competencia < seleccionado["precio"] and precio_competencia > 0:
                             precio_aplicar = int(precio_competencia * 0.95)
-                            print(f"\n¡Garantía Aceptada! Validando link en {competencia}... ¡Mano aprobada!")
-                            print(f"Te igualamos el precio y aplicamos -5% extra. Precio final unitario: {pagos.formatear_dinero(precio_aplicar)}")
+                            print(f"\n¡Garantía Aceptada! Te igualamos el precio y aplicamos -5% extra.")
+                            print(f"Precio final unitario: {pagos.formatear_dinero(precio_aplicar)}")
                         else:
-                            print(f"\nEl precio de {competencia} ({pagos.formatear_dinero(precio_competencia)}) no es menor al nuestro. Se mantiene nuestro precio original.")
+                            print(f"\nEl precio no es menor. Se mantiene nuestro precio original.")
                     except ValueError:
                         print("Precio inválido. No se pudo aplicar el beneficio.")
                 
                 cantidad = int(input(f"\n¿Cuántas unidades de '{seleccionado['nombre']}' desea agregar? "))
                 if cantidad > 0:
                     item_carrito = {
-                        "nombre": seleccionado["nombre"] + " (Mejor Precio Garantizado)" if precio_aplicar < seleccionado["precio"] else seleccionado["nombre"],
+                        "nombre": seleccionado["nombre"] + " (Garantía Precio)" if precio_aplicar < seleccionado["precio"] else seleccionado["nombre"],
                         "precio": precio_aplicar,
                         "cantidad": cantidad,
                         "subtotal": precio_aplicar * cantidad
@@ -120,12 +119,9 @@ while sesion_activa:
             print("El carrito está vacío. Ingrese artículos en el catálogo antes.")
             continue
             
-        print("\n=========================================")
-        print("       CHECKOUT DE PAGO (PAGOS-SERVICE)  ")
-        print("=========================================")
-        
         total_neto = sum(item["subtotal"] for item in carrito)
         
+        # Descuento aleatorio de cupón
         descuentos_posibles = [0, 10, 15]
         porcentaje_desc = random.choice(descuentos_posibles)
         monto_descuento = total_neto * (porcentaje_desc / 100)
@@ -133,29 +129,41 @@ while sesion_activa:
         
         iva, total_final = pagos.calcular_totales(neto_con_descuento)
 
-        print(f"Subtotal Neto Inicial: {pagos.formatear_dinero(total_neto)}")
-        if porcentaje_desc > 0:
-            print(f"¡Cupón Sorpresa Extra!: {porcentaje_desc}% de descuento")
-            print(f"Monto Descontado:      -{pagos.formatear_dinero(monto_descuento)}")
-            print(f"Nuevo Neto:            {pagos.formatear_dinero(neto_con_descuento)}")
-            
-        print(f"IVA (19%):             {pagos.formatear_dinero(iva)}")
-        print(f"Total Final a Pagar:   {pagos.formatear_dinero(total_final)} (IVA Incluido)")
-        print("-----------------------------------------")
+        print("\n=========================================")
+        print("       PASARELA DE PAGO (PAGOS-SERVICE)  ")
+        print("=========================================")
         print("Métodos disponibles: [1] Tarjeta | [2] Mercado Pago | [3] Google Play")
-        
         metodo_opcion = input("Seleccione una pasarela (1-3): ")
         metodo = "Tarjeta de Crédito" if metodo_opcion == "1" else "Mercado Pago" if metodo_opcion == "2" else "Google Play"
 
-        confirmar = input(f"¿Confirmar pago de {pagos.formatear_dinero(total_final)} con {metodo}? (si/no): ").lower()
+        print("\n=========================================")
+        print("           BOLETA DE VENTA DIGITAL       ")
+        print("              GZ-TRADING-BRIDGE          ")
+        print("=========================================")
+        for item in carrito:
+            print(f"{item['nombre'].ljust(30)} x{item['cantidad']}   {pagos.formatear_dinero(item['subtotal'])}")
+        print("-----------------------------------------")
+        print(f"Subtotal Neto:                {pagos.formatear_dinero(total_neto)}")
+        
+        if porcentaje_desc > 0:
+            print(f"Cupón Sorpresa ({porcentaje_desc}%):        -{pagos.formatear_dinero(monto_descuento)}")
+            print(f"Neto Reajustado:              {pagos.formatear_dinero(neto_con_descuento)}")
+            
+        print(f"IVA (19%):                    {pagos.formatear_dinero(iva)}")
+        print("-----------------------------------------")
+        print(f"TOTAL A PAGAR:                {pagos.formatear_dinero(total_final)}")
+        print(f"Medio de Pago:                {metodo}")
+        print("=========================================\n")
+        
+        confirmar = input(f"¿Desea confirmar el pago y finalizar la compra? (si/no): ").lower()
         
         if confirmar == "si":
             pagos.procesar_transaccion(metodo, total_final)
-            print("Pago procesado y validado. Ventana de despacho estimado: 24 - 30 JUN.")
-            print("¡Gracias por su compra en GZ-Trading-Bridge!")
+            print("\nPago procesado exitosamente. Ventana de despacho estimado: 24 - 30 JUN.")
+            print("¡Gracias por preferir GZ-Trading-Bridge!")
             break 
         else:
-            print("Transacción cancelada por el usuario. Volviendo al menú.")
+            print("Transacción cancelada. Los productos siguen en tu carrito. Volviendo al menú.")
 
     elif opcion == "4":
         print("Cerrando sesión de forma segura... ¡Adiós :)!")
