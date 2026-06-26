@@ -9,5 +9,5 @@ def procesar_transaccion(metodo_pago, total_final):
     print(f"Procesando cargo financiero por ${total_final:,}".replace(",", "."))
     return True
 
-def formato_moneda(valor):
+def formatear_dinero(valor):
     return f"${valor:,.0f}".replace(",", ".")

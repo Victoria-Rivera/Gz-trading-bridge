@@ -1,4 +1,4 @@
-import random  
+import random
 import Funciones.pagos_service as pagos
 import Funciones.auth_service as auth
 
@@ -12,15 +12,15 @@ CATALOGO = [
 carrito = []
 sesion_activa = False
 
+
 print("  GZ-TRADING-BRIDGE ")
 print("    ¡Bienvenido!    ")
 
-
+# control de acceso
 while not sesion_activa:
     print("--- INICIO DE SESIÓN ---")
     user = input("Correo: ")
     password = input("Contraseña: ")
-
 
     resultado = auth.validar_credenciales(user, password)
 
@@ -29,7 +29,7 @@ while not sesion_activa:
         sesion_activa = True
     elif resultado == "BLOQUEADO":
         print("Cuenta bloqueada en XAMPP por exceso de intentos erróneos.")
-        exit() 
+        exit()
     elif resultado == "ERROR_LARGO":
         print("La contraseña debe tener más de 8 caracteres.")
     else:
@@ -61,16 +61,35 @@ while sesion_activa:
             seleccionado = next((p for p in CATALOGO if p["id"] == prod_id), None)
             
             if seleccionado:
-                cantidad = int(input(f"¿Cuántas unidades de '{seleccionado['nombre']}' desea agregar? "))
+                precio_aplicar = seleccionado["precio"]
+                
+                print(f"\n[?] ¿Viste el producto '{seleccionado['nombre']}' más barato en la competencia?")
+                comparar = input("¿Deseas activar la Garantía de Mejor Precio? (si/no): ").lower()
+                
+                if comparar == "si":
+                    competencia = input("¿En qué tienda lo viste? (ej: Amazon, MercadoLibre, Ripley): ")
+                    try:
+                        precio_competencia = int(input(f"¿A qué precio neto (sin IVA) lo tienen en {competencia}?: $"))
+                        
+                        if precio_competencia < seleccionado["precio"] and precio_competencia > 0:
+                            precio_aplicar = int(precio_competencia * 0.95)
+                            print(f"\n¡Garantía Aceptada! Validando link en {competencia}... ¡Mano aprobada!")
+                            print(f"Te igualamos el precio y aplicamos -5% extra. Precio final unitario: {pagos.formatear_dinero(precio_aplicar)}")
+                        else:
+                            print(f"\nEl precio de {competencia} ({pagos.formatear_dinero(precio_competencia)}) no es menor al nuestro. Se mantiene nuestro precio original.")
+                    except ValueError:
+                        print("Precio inválido. No se pudo aplicar el beneficio.")
+                
+                cantidad = int(input(f"\n¿Cuántas unidades de '{seleccionado['nombre']}' desea agregar? "))
                 if cantidad > 0:
                     item_carrito = {
-                        "nombre": seleccionado["nombre"],
-                        "precio": seleccionado["precio"],
+                        "nombre": seleccionado["nombre"] + " (Mejor Precio Garantizado)" if precio_aplicar < seleccionado["precio"] else seleccionado["nombre"],
+                        "precio": precio_aplicar,
                         "cantidad": cantidad,
-                        "subtotal": seleccionado["precio"] * cantidad
+                        "subtotal": precio_aplicar * cantidad
                     }
                     carrito.append(item_carrito)
-                    print(f"{cantidad}x '{seleccionado['nombre']}' añadido(s) al carrito.")
+                    print(f"{cantidad}x '{item_carrito['nombre']}' añadido(s) al carrito.")
                 else:
                     print("La cantidad ingresada debe ser mayor a cero.")
             else:
@@ -107,23 +126,18 @@ while sesion_activa:
         
         total_neto = sum(item["subtotal"] for item in carrito)
         
-        #Descuento random
-        descuentos_posibles = [0, 10, 15, 25, 50]
+        descuentos_posibles = [0, 10, 15]
         porcentaje_desc = random.choice(descuentos_posibles)
-        
         monto_descuento = total_neto * (porcentaje_desc / 100)
         neto_con_descuento = total_neto - monto_descuento
         
         iva, total_final = pagos.calcular_totales(neto_con_descuento)
 
         print(f"Subtotal Neto Inicial: {pagos.formatear_dinero(total_neto)}")
-        
         if porcentaje_desc > 0:
-            print(f"¡Cupón Sorpresa Aplicado!: {porcentaje_desc}% de descuento")
+            print(f"¡Cupón Sorpresa Extra!: {porcentaje_desc}% de descuento")
             print(f"Monto Descontado:      -{pagos.formatear_dinero(monto_descuento)}")
             print(f"Nuevo Neto:            {pagos.formatear_dinero(neto_con_descuento)}")
-        else:
-            print("Cupón Sorpresa: Hoy no hubo suerte (0% de descuento)")
             
         print(f"IVA (19%):             {pagos.formatear_dinero(iva)}")
         print(f"Total Final a Pagar:   {pagos.formatear_dinero(total_final)} (IVA Incluido)")

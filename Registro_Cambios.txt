@@ -20,6 +20,7 @@ Historial de modificaciones
 15. Modificaciones del codigo de tienda_service
 16. Modificacion auth_service (en caso que no se decida montar una base de datos en MYSQL)
 17. Modificaciones a Tienda_service (implementando nuevas cosas en opcion 2)
+18. Se implemento un descuento extra
 
 Usuarios creados a modo de testeo:
 ----------------------------------
